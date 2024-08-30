@@ -2,32 +2,65 @@ from pydantic import BaseModel
 from typing import Optional
 from typing import List
 
+class ProdutoPutList(BaseModel):
+    id: Optional[int]
+    nome: str
+    preco: float
+    disponivel: bool
+    class Config:
+        orm_mode = True
+
 class Usuario(BaseModel):
-    id: str
+    id: Optional[int] = None
     nome: str
     telefone: str
-    # meus_produtos: List[Produto]
-    # minhas_vendas: List[Pedido]
-    # meus_pedidos: List[Pedido]
+    senha: str
+    produtos: List[ProdutoPutList] = []
+    class Config:
+        orm_mode = True
+
+class ProdutoSimples(BaseModel):
+    # id: str
+    usuario: Usuario
+    nome: str
+    preco: float
+    # disponivel: bool
+    class Config:
+        orm_mode = True
+
+class UsuarioSimples(BaseModel):
+    id: Optional[int] = None
+    nome: str
+    telefone: str
+    class Config:
+        orm_mode = True
 
 class Produto(BaseModel):
-    id: str
+    id: Optional[int] = None
     # usuario: Usuario
     nome: str
     detalhes: str
     preco: float
     disponivel: bool = False
-
-    class Confir:
+    usuario_id: int
+    usuario: Optional[UsuarioSimples]
+    # usuario: Usuario
+    class Config:
         orm_mode = True
 
+class ProdutoSimplesAtt(BaseModel):
+    nome: str
+    preco: float
+
+    class Config:
+        orm_mode = True
 class Pedido(BaseModel):
-    id: str
+    id: Optional[int] = None
     usuario: Usuario
-    # produto: Produto
+    produto: Produto
     quantidade: int
     entrega: bool = True
     endereco: str
-    observacao: str = 'Sem observações'
+    observacao: Optional[str] = 'Sem observações'
 
 

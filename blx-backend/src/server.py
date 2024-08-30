@@ -1,21 +1,19 @@
 # Rotas e controller
-from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
-from src.schemas.schemas import Produto
-from src.infra.sqlalchemy.repositorios.produto import RepositorioProduto
-from src.infra.sqlalchemy.config.database import get_db, criar_bd
+from fastapi import FastAPI, Depends, status
+from fastapi.middleware.cors import CORSMiddleware
+# from src.infra.sqlalchemy.config.database import get_db, criar_bd
+from src.routers import rotas_produtos, rotas_usuarios
 
-criar_bd()
+# criar_bd()
 
 app = FastAPI()
 
-@app.post("/produtos")
-def criar_produto(produto: Produto, db: Session = Depends(get_db)):
-    produto_criado = RepositorioProduto(db).criar(produto)
-    return produto_criado
+origins = ["http://127.0.0.1:8000"]
+app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, 
+                   allow_methods=["*"], allow_headers=["*"])
 
+# # ROTAS DE PRODUTOS
+app.include_router(rotas_produtos.router)
 
-@app.get("/produtos")
-def listar_produtos(db: Session = Depends(get_db)):
-    produtos = RepositorioProduto(db).listar()
-    return produtos
+# ROTAS DE USUARIOS
+app.include_router(rotas_usuarios.router)
