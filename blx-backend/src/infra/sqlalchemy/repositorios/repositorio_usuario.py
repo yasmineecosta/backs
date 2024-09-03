@@ -19,8 +19,9 @@ class RepositorioUsuario():
        usuarios = self.session.execute(stmt).scalars().all()
        return usuarios
     
-    def obter(self):
-        pass
-
-    def remover(self):
-        pass
+    def obter_por_telefone(self, telefone) -> models.Usuario:
+        query= select(models.Usuario).where(models.Usuario.telefone == telefone)
+        usuario = self.session.execute(query)
+        return usuario.scalars().first()
+    
+    
